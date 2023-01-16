@@ -1,0 +1,8 @@
+<h2>Playing as: <%= @player.name %></h2>
+<h2>Balance: <%= @player.balance %></h2>
+<div>
+  <canvas id="canvas" width="350" height="350">
+    Canvas not supported, use another browser.
+  </canvas>
+  <button id="spin-button" onClick="calculatePrize('keep');" phx-hook="Spin">Spin the Wheel</button>
+</div>
