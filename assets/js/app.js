@@ -63,7 +63,9 @@ const Hooks = {
     mounted() {
       theWheel = new Winwheel(this.wheelOpts);
       drawTriangle(theWheel.ctx);
-      window.calculatePrize = this.calculatePrize.bind(this);
+      this.handleEvent("spin", ({ result }) => {
+        this.calculatePrize(result);
+      });
     },
     wheelOpts: {
       numSegments: 12,
