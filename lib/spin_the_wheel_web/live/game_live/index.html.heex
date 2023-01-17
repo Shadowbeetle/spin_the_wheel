@@ -1,9 +1,18 @@
-<h2>Playing as: <%= @player.name %></h2>
-<h2>Balance: <span id="balance"><%= @init_balance %></span></h2>
-<h2>Hiscore: <span id="hiscore"><%= @init_hiscore %></span></h2>
-<div>
-  <canvas id="canvas" width="350" height="350">
-    Canvas not supported, use another browser.
-  </canvas>
-  <button id="spin-button" phx-hook="Spin" phx-click="spin">Spin the Wheel</button>
+<div x-data={"game({
+		balance: #{@init_balance},
+		hiscore: #{@init_hiscore},
+		displayedBalance: #{@init_balance},
+		displayedHiscore: #{@init_hiscore}
+	})"}>
+
+	<h2>Playing as: <%= @player.name %></h2>
+	<h2>Balance: <span id="balance" x-text="$store.game.displayedBalance"></span></h2>
+	<h2>Hiscore: <span id="hiscore" x-text="$store.game.displayedHiscore"></span></h2>
+
+	<div>
+		<canvas id="canvas" width="350" height="350">
+			Canvas not supported, use another browser.
+		</canvas>
+		<button id="spin-button" phx-hook="Spin" phx-click="spin">Spin the Wheel</button>
+	</div>
 </div>

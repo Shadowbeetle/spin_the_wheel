@@ -25,7 +25,17 @@ import "phoenix_html";
 import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
+import Alpine from "alpinejs";
 import { Winwheel } from "../vendor/Winwheel";
+
+window.Alpine = Alpine;
+
+Alpine.data("game", (init) => {
+  Alpine.store("game", init);
+  return init;
+});
+
+Alpine.start();
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -42,8 +52,6 @@ function alertPrize(indicatedSegment) {
   alert("You have won " + indicatedSegment.text);
 }
 
-let balance;
-let hiscore;
 let theWheel;
 
 function drawTriangle(ctx) {
@@ -63,10 +71,8 @@ function drawTriangle(ctx) {
 }
 
 function afterSpin() {
-  const balanceSpan = document.getElementById("balance");
-  const hiscoreSpan = document.getElementById("hiscore");
-  balanceSpan.innerText = balance;
-  hiscoreSpan.innerText = hiscore;
+  Alpine.store("game").displayedBalance = Alpine.store("game").balance;
+  Alpine.store("game").displayedHiscore = Alpine.store("game").hiscore;
 }
 
 const Hooks = {
@@ -75,9 +81,10 @@ const Hooks = {
       theWheel = new Winwheel(this.wheelOpts);
       drawTriangle(theWheel.ctx);
       this.handleEvent("spin", ({ result, newBalance, newHiscore }) => {
-        balance = newBalance;
-        console.log(newHiscore);
-        hiscore = newHiscore;
+        Alpine.store("game").balance = newBalance;
+        Alpine.store("game").hiscore = newHiscore;
+
+        console.log(Alpine.store("game"));
         this.calculatePrize(result);
       });
     },
@@ -136,6 +143,13 @@ const Hooks = {
 let liveSocket = new LiveSocket("/live", Socket, {
   params: { _csrf_token: csrfToken },
   hooks: Hooks,
+  dom: {
+    onBeforeElUpdated(from, to) {
+      if (from._x_dataStack) {
+        window.Alpine.clone(from, to);
+      }
+    },
+  },
 });
 
 // connect if there are any LiveViews on the page
