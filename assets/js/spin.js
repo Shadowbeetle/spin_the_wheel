@@ -3,6 +3,10 @@ import { Winwheel } from "../vendor/Winwheel";
 
 let winWheel;
 
+function getWinWheel() {
+  return winWheel;
+}
+
 export function setupGameStore() {
   Alpine.data("game", (init) => {
     Alpine.store("game", init);
@@ -64,7 +68,7 @@ export const SpinHook = {
       type: "spinToStop",
       duration: 5,
       spins: 8,
-      callbackAfter: `${drawTriangle.name}(winWheel.ctx)`,
+      callbackAfter: `${drawTriangle.name}(${getWinWheel.name}().ctx)`,
       callbackFinished: afterSpin,
     },
   },
