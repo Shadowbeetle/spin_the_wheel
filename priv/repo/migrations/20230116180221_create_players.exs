@@ -3,8 +3,9 @@ defmodule SpinTheWheel.Repo.Migrations.CreatePlayers do
 
   def change do
     create table(:players) do
-      add :name, :string
-      add :balance, :integer, default: 100
+      add :name, :string, null: false
+      add :balance, :integer, null: false, default: 100
+      add :hiscore, :integer, null: false, default: 0
 
       timestamps()
     end

@@ -19,7 +19,9 @@ defmodule SpinTheWheelWeb.GameLive.Index do
     {:ok,
      socket
      |> assign(page_title: "Pick a name")
-     |> assign(player: player)}
+     |> assign(player: player)
+     |> assign(init_balance: player.balance)
+     |> assign(init_hiscore: player.hiscore)}
   end
 
   @impl
@@ -31,16 +33,28 @@ defmodule SpinTheWheelWeb.GameLive.Index do
     {:ok, player} =
       case random do
         0 ->
-          Players.update_player(player, %{balance: player.balance * 2})
+          new_balance = player.balance * 2
+          new_hiscore = if new_balance > player.hiscore, do: new_balance, else: player.hiscore
+          Players.update_player(player, %{balance: player.balance * 2, hiscore: new_hiscore})
 
         1 ->
           Players.update_player(player, %{balance: 0})
 
         2 ->
-          {:ok, player}
+          if player.hiscore == 0 do
+            Players.update_player(player, %{hiscore: player.balance})
+          else
+            {:ok, player}
+          end
       end
 
     {:noreply,
-     socket |> assign(player: player) |> push_event("spin", %{result: @result_map[random]})}
+     socket
+     |> assign(player: player)
+     |> push_event("spin", %{
+       result: @result_map[random],
+       newBalance: player.balance,
+       newHiscore: player.hiscore
+     })}
   end
 end

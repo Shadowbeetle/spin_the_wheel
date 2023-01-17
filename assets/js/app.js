@@ -42,6 +42,10 @@ function alertPrize(indicatedSegment) {
   alert("You have won " + indicatedSegment.text);
 }
 
+let balance;
+let hiscore;
+let theWheel;
+
 function drawTriangle(ctx) {
   // Get the canvas context the wheel uses.
 
@@ -57,13 +61,23 @@ function drawTriangle(ctx) {
   ctx.stroke(); // Complete the path by stroking (draw lines).
   ctx.fill();
 }
-let theWheel;
+
+function afterSpin() {
+  const balanceSpan = document.getElementById("balance");
+  const hiscoreSpan = document.getElementById("hiscore");
+  balanceSpan.innerText = balance;
+  hiscoreSpan.innerText = hiscore;
+}
+
 const Hooks = {
   Spin: {
     mounted() {
       theWheel = new Winwheel(this.wheelOpts);
       drawTriangle(theWheel.ctx);
-      this.handleEvent("spin", ({ result }) => {
+      this.handleEvent("spin", ({ result, newBalance, newHiscore }) => {
+        balance = newBalance;
+        console.log(newHiscore);
+        hiscore = newHiscore;
         this.calculatePrize(result);
       });
     },
@@ -89,7 +103,7 @@ const Hooks = {
         duration: 5,
         spins: 8,
         callbackAfter: "drawTriangle(theWheel.ctx)",
-        callbackFinished: alertPrize,
+        callbackFinished: afterSpin,
       },
     },
     calculatePrize(prize) {
