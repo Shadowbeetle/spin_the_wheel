@@ -7,7 +7,7 @@ A quickly hacked up game for the weekly task in <a href="https://twitter.com/cas
 The game is fairly simple: Spin the wheel to reach one of three outcomes: keep what you have, double what you have, or lose all.
 </p>
 <p>
-You start the game with 100 points, and lasts until you go bankrupt.
+You start the game with 100 points, and it lasts until you go bankrupt.
 Once the game is over you can keep spinning, but it will have no effect from then on.
 </p>
 <p>
@@ -24,8 +24,8 @@ However, both your balance and hiscore will change unexpectedly if multiple peop
     phx-change="validate"
     phx-submit="save">
   
-    <%= label f, :name %>
-    <%= text_input f, :name %>
+    <span><strong>Go on! Type a player name in the box below and let's begin</strong></span>
+    <%= text_input f, :name, style: "text-align: center" %>
     <%= error_tag f, :name %>
   
     <div>

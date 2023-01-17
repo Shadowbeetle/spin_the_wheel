@@ -11,9 +11,9 @@
 		and create a new player to play with
 	</p>
 
-	<h2>Playing as: <%= @player.name %></h2>
-	<h2>Balance: <span id="balance" x-text="$store.game.displayedBalance"></span></h2>
-	<h2>Hiscore: <span id="hiscore" x-text="$store.game.displayedHiscore"></span></h2>
+	<div><strong>Playing as:</strong> <%= @player.name %></div>
+	<div><strong>Balance:</strong> <span id="balance" x-text="$store.game.displayedBalance"></span></div>
+	<div><strong>Hiscore:</strong> <span id="hiscore" x-text="$store.game.displayedHiscore"></span></div>
 
 	<div>
 		<div style="display: flex; justify-content: center">

@@ -10,7 +10,7 @@ defmodule SpinTheWheelWeb.PlayerLive.Index do
 
     {:ok,
      socket
-     |> assign(page_title: "Pick a name")
+     |> assign(page_title: "Welcome!")
      |> assign(player: %Player{})
      |> assign(changeset: changeset)}
   end
