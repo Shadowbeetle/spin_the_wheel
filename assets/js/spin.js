@@ -64,7 +64,7 @@ export const SpinHook = {
       type: "spinToStop",
       duration: 5,
       spins: 8,
-      callbackAfter: "drawTriangle(winWheel.ctx)",
+      callbackAfter: `${drawTriangle.name}(winWheel.ctx)`,
       callbackFinished: afterSpin,
     },
   },
