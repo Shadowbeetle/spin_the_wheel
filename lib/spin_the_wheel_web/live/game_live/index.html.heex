@@ -5,6 +5,12 @@
 		displayedHiscore: #{@init_hiscore}
 	})"}>
 
+	<p class="alert alert-danger" x-show="displayedBalance == 0">
+		You are bankrupt! You can keep spinning in vain, or
+		<%= live_redirect("go back", to: Routes.player_index_path(@socket, :index)) %>
+		and create a new player to play with
+	</p>
+
 	<h2>Playing as: <%= @player.name %></h2>
 	<h2>Balance: <span id="balance" x-text="$store.game.displayedBalance"></span></h2>
 	<h2>Hiscore: <span id="hiscore" x-text="$store.game.displayedHiscore"></span></h2>
