@@ -26,14 +26,11 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import Alpine from "alpinejs";
-import { Winwheel } from "../vendor/Winwheel";
+import { SpinHook, setupGameStore } from "./spin";
 
 window.Alpine = Alpine;
 
-Alpine.data("game", (init) => {
-  Alpine.store("game", init);
-  return init;
-});
+setupGameStore();
 
 Alpine.start();
 
@@ -52,97 +49,9 @@ function alertPrize(indicatedSegment) {
   alert("You have won " + indicatedSegment.text);
 }
 
-let theWheel;
-
-function drawTriangle(ctx) {
-  // Get the canvas context the wheel uses.
-
-  ctx.strokeStyle = "navy"; // Set line colour.
-  ctx.fillStyle = "aqua"; // Set fill colour.
-  ctx.lineWidth = 2;
-  ctx.lineWidth = 2;
-  ctx.beginPath(); // Begin path.
-  ctx.moveTo(145, 5); // Move to initial position.
-  ctx.lineTo(205, 5); // Draw lines to make the shape.
-  ctx.lineTo(175, 40);
-  ctx.lineTo(146, 5);
-  ctx.stroke(); // Complete the path by stroking (draw lines).
-  ctx.fill();
-}
-
-function afterSpin() {
-  Alpine.store("game").displayedBalance = Alpine.store("game").balance;
-  Alpine.store("game").displayedHiscore = Alpine.store("game").hiscore;
-}
-
-const Hooks = {
-  Spin: {
-    mounted() {
-      theWheel = new Winwheel(this.wheelOpts);
-      drawTriangle(theWheel.ctx);
-      this.handleEvent("spin", ({ result, newBalance, newHiscore }) => {
-        Alpine.store("game").balance = newBalance;
-        Alpine.store("game").hiscore = newHiscore;
-
-        console.log(Alpine.store("game"));
-        this.calculatePrize(result);
-      });
-    },
-    wheelOpts: {
-      numSegments: 12,
-      outerRadius: 170,
-      segments: [
-        { fillStyle: "#89f26e", text: "Double" },
-        { fillStyle: "#000000", textFillStyle: "#ffffff", text: "Bankrupt" },
-        { fillStyle: "#7de6ef", text: "Keep" },
-        { fillStyle: "#89f26e", text: "Double" },
-        { fillStyle: "#000000", textFillStyle: "#ffffff", text: "Bankrupt" },
-        { fillStyle: "#7de6ef", text: "Keep" },
-        { fillStyle: "#89f26e", text: "Double" },
-        { fillStyle: "#000000", textFillStyle: "#ffffff", text: "Bankrupt" },
-        { fillStyle: "#7de6ef", text: "Keep" },
-        { fillStyle: "#89f26e", text: "Double" },
-        { fillStyle: "#000000", textFillStyle: "#ffffff", text: "Bankrupt" },
-        { fillStyle: "#7de6ef", text: "Keep" },
-      ],
-      animation: {
-        type: "spinToStop",
-        duration: 5,
-        spins: 8,
-        callbackAfter: "drawTriangle(theWheel.ctx)",
-        callbackFinished: afterSpin,
-      },
-    },
-    calculatePrize(prize) {
-      theWheel = new Winwheel(this.wheelOpts);
-      drawTriangle(theWheel.ctx);
-      // We add padding to the actual border of the result to make it more obvious
-      const ANGLE_PADDING = 5;
-      const PRIZE_DEGREE = 30;
-
-      const prizeToAngle = {
-        double: 0 + ANGLE_PADDING,
-        bankrupt: PRIZE_DEGREE + ANGLE_PADDING,
-        keep: PRIZE_DEGREE * 2 + ANGLE_PADDING,
-      };
-
-      let stopAt =
-        prizeToAngle[prize] +
-        Math.floor(Math.random() * (PRIZE_DEGREE - ANGLE_PADDING));
-
-      console.log(theWheel.animation);
-      // Important thing is to set the stopAngle of the animation before stating the spin.
-      theWheel.animation.stopAngle = stopAt;
-
-      // May as well start the spin from here.
-      theWheel.startAnimation();
-    },
-  },
-};
-
 let liveSocket = new LiveSocket("/live", Socket, {
   params: { _csrf_token: csrfToken },
-  hooks: Hooks,
+  hooks: { Spin: SpinHook },
   dom: {
     onBeforeElUpdated(from, to) {
       if (from._x_dataStack) {
