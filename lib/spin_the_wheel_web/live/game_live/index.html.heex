@@ -16,9 +16,17 @@
 	<h2>Hiscore: <span id="hiscore" x-text="$store.game.displayedHiscore"></span></h2>
 
 	<div>
-		<canvas id="canvas" width="350" height="350">
-			Canvas not supported, use another browser.
-		</canvas>
-		<button id="spin-button" phx-hook="Spin" phx-click="spin">Spin the Wheel</button>
+		<div style="display: flex; justify-content: center">
+			<canvas id="canvas" width="350" height="350">
+				Canvas not supported, use another browser.
+			</canvas>
+		</div>
+		<div style="display: flex; justify-content: center">
+			<button id="spin-button" phx-hook="Spin" phx-click="spin">Spin the Wheel</button>
+		</div>
+		<div style="display: flex; align-items: center; flex-direction: column; margin-top: 50px">
+			<%= live_redirect("Hiscores", to: Routes.player_hiscores_path(@socket, :index)) %>
+			<%= live_redirect("Back", to: Routes.player_index_path(@socket, :index)) %>
+		</div>
 	</div>
 </div>
