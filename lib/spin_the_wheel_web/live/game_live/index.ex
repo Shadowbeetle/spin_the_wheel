@@ -18,7 +18,7 @@ defmodule SpinTheWheelWeb.GameLive.Index do
 
     {:ok,
      socket
-     |> assign(page_title: "Pick a name")
+     |> assign(page_title: "Game")
      |> assign(player: player)
      |> assign(init_balance: player.balance)
      |> assign(init_hiscore: player.hiscore)}
