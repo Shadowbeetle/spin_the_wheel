@@ -18,6 +18,7 @@ defmodule SpinTheWheelWeb.Router do
     pipe_through(:browser)
 
     live("/", PlayerLive.Index, :index)
+    live("/hiscores", PlayerLive.Hiscores, :index)
     live "/:player_name/game", GameLive.Index, :index
   end
 
