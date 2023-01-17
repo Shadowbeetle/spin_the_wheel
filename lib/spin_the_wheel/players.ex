@@ -18,7 +18,7 @@ defmodule SpinTheWheel.Players do
 
   """
   def list_players do
-    Repo.all(Player)
+    Player |> order_by(desc: :hiscore, desc: :inserted_at) |> Repo.all()
   end
 
   @doc """

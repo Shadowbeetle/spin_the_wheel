@@ -2,14 +2,16 @@
 <table>
 	<thead>
 		<tr>
+			<td><strong>#</strong></td>
 			<td><strong>Name</strong></td>
 			<td><strong>Hiscore</strong></td>
 			<td><strong>Current balance</strong></td>
 		</tr>
 	</thead>
 	<tbody>
-		<%= for player <- @players do %>
+		<%= for { player, index } <- Enum.with_index(@players) do %>
 			<tr>
+				<td><%= index + 1 %></td>
 				<td><%= player.name %></td>
 				<td><%= player.hiscore %></td>
 				<td><%= player.balance %></td>
